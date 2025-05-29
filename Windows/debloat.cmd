@@ -1,20 +1,12 @@
 @echo off
-echo "------------------------Uninstalling unnecessary software---------------------"
-echo "Uninstalling OneDrive"
-@REM winget uninstall Microsoft.OneDrive
-TASKKILL /f /im OneDrive.exe
-%systemroot%\SysWOW64\OneDriveSetup.exe /uninstall
-echo "Uninstalling Microsoft 365 things"
-powershell.exe -c "Get-AppxPackage -allusers -Name MicrosoftTeams | Remove-AppxPackage"
-
-echo "Uninstalling Cortana"
-powershell.exe -c "Get-AppxPackage -allusers *Microsoft.549981C3F5F10* | Remove-AppxPackage"
-
-echo "------------------------Disabling software/services that cannot be removed/uninstalled---------------------"
-echo "Stopping the Windows Update service"
-net stop wuauserv
-echo "Disabling startup of Windows Update service (lmao xd watch it start anyways)"
-sc config "wuauserv" start=disabled
-echo "Disabling copilot"
-reg add HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f
-pause
+echo "Set dark theme"
+powershell.exe -c "start-process -filepath 'C:\Windows\Resources\Themes\dark.theme'"; timeout /t 3; taskkill /im "systemsettings.exe" /f
+echo "Install vscode (will prob not work)"
+winget install -e --id Microsoft.VisualStudioCode
+echo "Some manual steps... Configure last taskbar settings"
+start ms-settings:taskbar
+echo "Configure Microsoft Edge"
+reg import edge-debloat.reg
+"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --update
+echo "Manualy change search engine"
+start msedge
